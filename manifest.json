@@ -1,0 +1,10 @@
+{
+	"id": "quick-todo",
+	"name": "Quick To-do",
+	"version": "1.0.0",
+	"minAppVersion": "1.4.0",
+	"description": "Capture a to-do in one tap and tick items off from a simple list, saved as ordinary checklist lines in one note.",
+	"author": "AI-Viber",
+	"authorUrl": "https://github.com/AI-Viber",
+	"isDesktopOnly": false
+}

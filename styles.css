@@ -1,0 +1,162 @@
+/* Quick To-do. Sizes are chosen for thumbs first: rows and buttons are at least 44px tall. */
+
+.quick-todo-view {
+	--quick-todo-row: 44px;
+	--checkbox-size: 24px;
+	padding-bottom: var(--size-4-12);
+}
+
+/* Add row (stays at the top while the list scrolls) */
+.quick-todo-add {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: flex;
+	gap: var(--size-4-2);
+	padding-bottom: var(--size-4-3);
+	background: var(--background-primary);
+}
+
+.quick-todo-input {
+	flex: 1 1 auto;
+	min-width: 0;
+	height: var(--quick-todo-row);
+	/* 16px stops iOS from zooming in when the box is focused */
+	font-size: 16px;
+}
+
+.quick-todo-add button,
+.quick-todo-buttons button,
+.quick-todo-clear,
+.quick-todo-done-toggle {
+	min-height: var(--quick-todo-row);
+}
+
+.quick-todo-source {
+	margin-bottom: var(--size-4-2);
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}
+
+.quick-todo-source a {
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.quick-todo-source a:hover {
+	color: var(--text-muted);
+	text-decoration: underline;
+}
+
+.quick-todo-empty {
+	padding: var(--size-4-8) 0;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+/* Groups (daily notes) */
+.quick-todo-group-title {
+	margin: var(--size-4-3) 0 var(--size-4-1);
+	font-size: var(--font-ui-smaller);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+}
+
+/* Items */
+.quick-todo-item {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-3);
+	min-height: var(--quick-todo-row);
+	padding: 0 var(--size-4-1);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.quick-todo-depth-1 { padding-left: var(--size-4-6); }
+.quick-todo-depth-2 { padding-left: var(--size-4-10); }
+.quick-todo-depth-3 { padding-left: var(--size-4-14, 56px); }
+
+.quick-todo-check {
+	flex: none;
+	margin: 0;
+}
+
+.quick-todo-text {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: var(--size-4-3) 0;
+	overflow-wrap: anywhere;
+	cursor: pointer;
+}
+
+.quick-todo-item.is-done .quick-todo-text {
+	color: var(--text-muted);
+	text-decoration: line-through;
+}
+
+.quick-todo-date {
+	flex: none;
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}
+
+.quick-todo-date.is-stale {
+	color: var(--text-warning);
+}
+
+.quick-todo-edit {
+	flex: none;
+	width: var(--quick-todo-row);
+	height: var(--quick-todo-row);
+	color: var(--text-faint);
+}
+
+/* Done section */
+.quick-todo-done {
+	margin-top: var(--size-4-6);
+}
+
+.quick-todo-done-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--size-4-2);
+}
+
+.quick-todo-done-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	background: none;
+	box-shadow: none;
+	color: var(--text-muted);
+}
+
+.quick-todo-chevron {
+	display: flex;
+}
+
+.quick-todo-clear {
+	background: none;
+	box-shadow: none;
+	color: var(--text-muted);
+}
+
+/* Dialogs */
+.quick-todo-modal .quick-todo-input {
+	width: 100%;
+}
+
+.quick-todo-status {
+	min-height: 1.5em;
+	margin-top: var(--size-4-2);
+	color: var(--text-muted);
+}
+
+.quick-todo-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--size-4-2);
+	margin-top: var(--size-4-4);
+}

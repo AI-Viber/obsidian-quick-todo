@@ -1,0 +1,22 @@
+{
+	"name": "obsidian-quick-todo",
+	"version": "1.0.0",
+	"description": "Obsidian plugin: capture a to-do in one tap and tick items off from a simple list.",
+	"main": "main.js",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "node esbuild.config.mjs production",
+		"lint": "eslint src",
+		"lint:obsidian": "eslint -c eslint.obsidian.config.mjs src",
+		"test": "node --import ./test/register.mjs --test \"test/*.test.mjs\"",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": ["obsidian", "obsidian-plugin", "todo", "tasks", "quick-capture"],
+	"license": "MIT",
+	"devDependencies": {
+		"esbuild": "^0.28.2",
+		"eslint": "^9.0.0",
+		"eslint-plugin-obsidianmd": "latest",
+		"obsidian": "latest"
+	}
+}
