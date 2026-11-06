@@ -13,6 +13,15 @@ function makeApp(files = {}) {
 		leaves: [],
 		revealed: [],
 		opened: [],
+		listeners: [],
+		on(name, callback) {
+			const ref = { name, callback };
+			this.listeners.push(ref);
+			return ref;
+		},
+		onLayoutReady(callback) {
+			this.ready = callback;
+		},
 		getLeavesOfType(type) {
 			return this.leaves.filter((leaf) => leaf.type === type);
 		},

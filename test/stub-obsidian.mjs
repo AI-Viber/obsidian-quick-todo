@@ -111,7 +111,17 @@ export class Plugin {
 		this.viewCreators = {};
 		this.events = [];
 		this.protocolHandlers = {};
+		this.cleanups = [];
 		this.stored = null;
+	}
+
+	register(cleanup) {
+		this.cleanups.push(cleanup);
+	}
+
+	/** What Obsidian does when the plugin is turned off. */
+	unload() {
+		for (const cleanup of this.cleanups.splice(0)) cleanup();
 	}
 
 	addCommand(command) {

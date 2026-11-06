@@ -328,7 +328,7 @@ function showSettings(overrides = {}) {
 
 test("settings for a fixed note", () => {
 	const { names } = showSettings();
-	assert.deepEqual(names(), ["Save to-dos in", "To-do note", "Add new items at", "Add the date to new items", "Keep the add box open", "Archive note"]);
+	assert.deepEqual(names(), ["Save to-dos in", "To-do note", "Add new items at", "Add the date to new items", "Keep the add box open", "Show on the empty tab screen", "Archive note"]);
 });
 
 test("settings for the daily note, reached by switching the first setting", async () => {
@@ -347,6 +347,7 @@ test("settings for the daily note, reached by switching the first setting", asyn
 		"Add new items at",
 		"Add the date to new items",
 		"Keep the add box open",
+		"Show on the empty tab screen",
 		"Archive note",
 	]);
 });

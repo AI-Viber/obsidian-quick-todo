@@ -91,6 +91,28 @@ export class FakeEl {
 		this.focused = true;
 	}
 
+	remove() {
+		if (this.parent) this.parent.children = this.parent.children.filter((el) => el !== this);
+		this.parent = null;
+	}
+
+	/** Move (or add) `el` just before `ref`, like the real DOM. */
+	insertBefore(el, ref) {
+		el.remove();
+		const at = this.children.indexOf(ref);
+		el.parent = this;
+		this.children.splice(at === -1 ? this.children.length : at, 0, el);
+	}
+
+	/** Only simple ".class" selectors are supported. */
+	querySelectorAll(selector) {
+		return this.findAll(selector.replace(/^\./, ""));
+	}
+
+	querySelector(selector) {
+		return this.querySelectorAll(selector)[0] ?? null;
+	}
+
 	/** Every descendant element matching `test`. */
 	all(test) {
 		const found = [];

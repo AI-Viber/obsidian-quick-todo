@@ -12,6 +12,8 @@ export const DEFAULT_SETTINGS = {
 	addPosition: "bottom",
 	addCreatedDate: false,
 	keepBoxOpen: false,
+	// Show "Quick to-do" on Obsidian's "No file is open" screen.
+	showOnEmptyTab: true,
 	// Optional note that "Clear" moves finished items into.
 	archivePath: "",
 	// Whether the Done section in the list is expanded.
@@ -110,6 +112,11 @@ export class QuickTodoSettingTab extends PluginSettingTab {
 			.setName("Keep the add box open")
 			.setDesc("Stay in the add box after each item, ready for the next one.")
 			.addToggle((toggle) => toggle.setValue(s.keepBoxOpen).onChange((value) => save("keepBoxOpen", value)));
+
+		new Setting(containerEl)
+			.setName("Show on the empty tab screen")
+			.setDesc("Adds Quick to-do beside Create new note, Go to file and the other options when no note is open.")
+			.addToggle((toggle) => toggle.setValue(s.showOnEmptyTab).onChange((value) => save("showOnEmptyTab", value)));
 
 		new Setting(containerEl)
 			.setName("Archive note")

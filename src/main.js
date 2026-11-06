@@ -1,4 +1,5 @@
 import { Notice, Plugin } from "obsidian";
+import { addEmptyStateAction, removeEmptyStateActions } from "./empty-state.js";
 import { AddModal } from "./modals.js";
 import { DEFAULT_SETTINGS, QuickTodoSettingTab } from "./settings.js";
 import { TodoStore } from "./store.js";
@@ -30,6 +31,18 @@ export default class QuickTodoPlugin extends Plugin {
 		this.registerEvent(vault.on("create", (file) => this.onNoteChanged(file.path)));
 		this.registerEvent(vault.on("delete", (file) => this.onNoteChanged(file.path)));
 		this.registerEvent(vault.on("rename", (file, oldPath) => this.onNoteChanged(file.path, oldPath)));
+
+		// The "No file is open" screen is drawn by Obsidian after these events, so look again shortly afterwards too.
+		const { workspace } = this.app;
+		const refresh = () => this.refreshEmptyState();
+		this.registerEvent(workspace.on("layout-change", refresh));
+		this.registerEvent(workspace.on("active-leaf-change", refresh));
+		this.registerEvent(workspace.on("file-open", refresh));
+		workspace.onLayoutReady(refresh);
+		this.register(() => {
+			window.clearTimeout(this.emptyTimer);
+			removeEmptyStateActions(this.app);
+		});
 	}
 
 	async loadSettings() {
@@ -38,7 +51,21 @@ export default class QuickTodoPlugin extends Plugin {
 
 	async saveSettings(redraw = true) {
 		await this.saveData(this.settings);
-		if (redraw) this.redrawLists();
+		if (redraw) {
+			this.redrawLists();
+			this.refreshEmptyState();
+		}
+	}
+
+	/** Show or hide the entry on the "No file is open" screen to match the setting. */
+	refreshEmptyState() {
+		const apply = () => {
+			if (this.settings.showOnEmptyTab) addEmptyStateAction(this.app, "Quick to-do", () => this.openAddBox());
+			else removeEmptyStateActions(this.app);
+		};
+		apply();
+		window.clearTimeout(this.emptyTimer);
+		this.emptyTimer = window.setTimeout(apply, 200);
 	}
 
 	openAddBox(prefill = "") {

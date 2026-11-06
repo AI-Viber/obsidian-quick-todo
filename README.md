@@ -12,6 +12,7 @@ Built for the phone first, but it works the same on desktop.
 - **Daily note option**: save to today's daily note instead, and optionally list open items from the last few days too.
 - **Added date (optional)**: stamps new items with `➕ 2026-11-06`, the format the [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) plugin uses. The list shows it as a small date, highlighted once an item has waited two weeks.
 - **Clear or archive**: one button removes finished items, or moves them to an archive note if you set one. It asks for a second tap first.
+- **On the empty tab screen**: adds **Quick to-do** beside *Create new note*, *Go to file* and the other options on Obsidian's "No file is open" screen. Tap it to open the add box. It can be turned off in settings.
 - **Add from a link**: `obsidian://quick-todo?vault=YOUR_VAULT&text=Buy%20milk` opens the add box with the text filled in (handy for an iOS Shortcut). It never adds anything by itself.
 
 ## Using it on a phone
@@ -23,6 +24,8 @@ The plugin adds three commands, all under *Quick to-do* in the command palette:
 | Add item | Opens the add box |
 | Open list | Opens the list |
 | Open note | Opens the to-do note itself |
+
+The empty tab entry has no command of its own: it opens the same add box as *Add item*.
 
 To make capturing quick:
 
@@ -55,6 +58,7 @@ New items look like this:
 - **Add new items at**: the end or the start of the list.
 - **Add the date to new items**: the `➕` date described above.
 - **Keep the add box open**: stay in the box after each item.
+- **Show on the empty tab screen**: the entry described above (on by default).
 - **Archive note**: where *Clear* moves finished items (blank means delete them).
 
 ## Installation
@@ -62,6 +66,10 @@ New items look like this:
 Once it is listed in the community directory: **Settings → Community plugins → Browse**, search for *Quick To-do*, then install and enable it.
 
 To try it before then, install it with [BRAT](https://github.com/TfTHacker/obsidian42-brat) using `AI-Viber/obsidian-quick-todo`, or copy `main.js`, `manifest.json` and `styles.css` from the latest release into `<your vault>/.obsidian/plugins/quick-todo/` and enable the plugin.
+
+## Known limits
+
+Obsidian has no official way to add to the "No file is open" screen, so the plugin adds its entry to the page directly. If a future Obsidian version changes that screen, the entry may stop appearing (nothing else is affected). The commands, ribbon icons and pull-down action keep working.
 
 ## Privacy
 
@@ -85,6 +93,7 @@ The source is plain JavaScript in `src/`, bundled by esbuild. The tests run the 
 | `todo-core.js` | Reading and editing to-do lines in a note's text (no Obsidian code) |
 | `store.js` | Reads and writes the to-do note(s) in the vault |
 | `view.js` | The list |
+| `empty-state.js` | The entry on the "No file is open" screen |
 | `modals.js` | The add and edit dialogs |
 | `settings.js` | Settings and the settings screen |
 | `ui.js` | The two-tap confirm used by Delete and Clear |
