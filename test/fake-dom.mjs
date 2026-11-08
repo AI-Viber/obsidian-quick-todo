@@ -131,6 +131,23 @@ export class FakeEl {
 		return this.findAll(cls)[0] ?? null;
 	}
 
+	// A few read-only parts of the real DOM, used to copy Obsidian's button layout.
+	get tagName() {
+		return this.tag.toUpperCase();
+	}
+
+	get classList() {
+		return [...this.classes];
+	}
+
+	get textContent() {
+		return this.allText;
+	}
+
+	getElementsByTagName(tag) {
+		return this.all((el) => el.tag === tag.toLowerCase());
+	}
+
 	get allText() {
 		return [this.text, ...this.children.map((child) => child.allText)].filter(Boolean).join(" ");
 	}

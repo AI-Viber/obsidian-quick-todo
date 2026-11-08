@@ -180,3 +180,56 @@ test("the delayed second look adds the entry to a screen drawn just after the ev
 	assert.equal(draw.list.findAll("quick-todo-empty-action").length, 1);
 	plugin.unload();
 });
+
+// ---- matching the look of Obsidian's buttons ----
+
+/** The newer screen: rounded buttons with an icon, a label and sometimes a shortcut badge. */
+function buttonTab() {
+	const containerEl = new FakeEl();
+	const list = containerEl.createDiv({ cls: "empty-state-action-list" });
+	const button = (label, hotkey) => {
+		const b = list.createDiv({ cls: ["empty-state-action", "tappable", "mod-boxed"] });
+		b.createDiv({ cls: "empty-state-action-icon" }).createEl("svg", { cls: "svg-icon" });
+		b.createDiv({ cls: "empty-state-action-label", text: label });
+		if (hotkey) b.createDiv({ cls: "empty-state-action-hotkey", text: hotkey });
+		return b;
+	};
+	button("New note", "⌘ N").addClass("is-selected");
+	button("New base");
+	button("New canvas");
+	button("Go to file", "⌘ O");
+	button("See recent files", "⌘ ⇧ O");
+	button("Close");
+	return { leaf: { view: { containerEl } }, list };
+}
+
+test("on the newer screen the entry copies the other buttons' layout, after the New buttons", () => {
+	const { leaf, list } = buttonTab();
+	addEmptyStateAction(appWith(leaf), "Quick to-do", () => {});
+	const entry = list.find("quick-todo-empty-action");
+
+	assert.deepEqual(
+		list.children.map((el) => el.find("empty-state-action-label").text),
+		["New note", "New base", "New canvas", "Quick to-do", "Go to file", "See recent files", "Close"],
+	);
+	// Same outline and styling classes as Obsidian's buttons, without their temporary states.
+	for (const cls of ["empty-state-action", "tappable", "mod-boxed"]) assert.ok(entry.hasClass(cls), cls);
+	assert.equal(entry.hasClass("is-selected"), false);
+	// An icon slot with its own icon, a label slot, and no shortcut badge.
+	assert.deepEqual(entry.children.map((c) => [...c.classes][0]), ["empty-state-action-icon", "empty-state-action-label"]);
+	assert.equal(entry.find("empty-state-action-icon").icon, "plus-circle");
+	assert.equal(entry.find("empty-state-action-hotkey"), null);
+});
+
+test("on the newer screen the entry still runs the action and is removed cleanly", async () => {
+	const { leaf, list } = buttonTab();
+	let runs = 0;
+	const app = appWith(leaf);
+	addEmptyStateAction(app, "Quick to-do", () => runs++);
+	addEmptyStateAction(app, "Quick to-do", () => runs++);
+	assert.equal(list.findAll("quick-todo-empty-action").length, 1);
+	await list.find("quick-todo-empty-action").click();
+	assert.equal(runs, 1);
+	removeEmptyStateActions(app);
+	assert.equal(list.children.length, 6);
+});
