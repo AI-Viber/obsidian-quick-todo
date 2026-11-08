@@ -13,6 +13,7 @@ Built for the phone first, but it works the same on desktop.
 - **Added date (optional)**: stamps new items with `➕ 2026-11-06`, the format the [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) plugin uses. The list shows it as a small date, highlighted once an item has waited two weeks.
 - **Clear or archive**: one button removes finished items, or moves them to an archive note if you set one. It asks for a second tap first.
 - **On the empty tab screen**: adds **Quick to-do** beside *Create new note*, *Go to file* and the other options on Obsidian's "No file is open" screen. Tap it to open the add box. It can be turned off in settings.
+- **In the menus**: **New to-do** is in each note's *More options* (⋯) menu and in the right-click menu while editing (long-press on a phone or tablet). On a Mac (and Windows or Linux) desktop it is also in the **File** menu of the menu bar, showing your *Add item* hotkey if you have set one. Each opens the add box. They can be turned off in settings.
 - **Add from a link**: `obsidian://quick-todo?vault=YOUR_VAULT&text=Buy%20milk` opens the add box with the text filled in (handy for an iOS Shortcut). It never adds anything by itself.
 
 ## Using it on a phone
@@ -59,6 +60,7 @@ New items look like this:
 - **Add the date to new items**: the `➕` date described above.
 - **Keep the add box open**: stay in the box after each item.
 - **Show on the empty tab screen**: the entry described above (on by default).
+- **Show in menus**: the New to-do menu items described above (on by default).
 - **Archive note**: where *Clear* moves finished items (blank means delete them).
 
 ## Installation
@@ -68,6 +70,8 @@ Once it is listed in the community directory: **Settings → Community plugins �
 To try it before then, install it with [BRAT](https://github.com/TfTHacker/obsidian42-brat) using `AI-Viber/obsidian-quick-todo`, or copy `main.js`, `manifest.json` and `styles.css` from the latest release into `<your vault>/.obsidian/plugins/quick-todo/` and enable the plugin.
 
 ## Known limits
+
+Obsidian has no official way for plugins to add to the menu bar. On desktop, Quick To-do adds its File menu item through Electron, the framework Obsidian's desktop app is built on. If a future Obsidian version blocks that, the item simply doesn't appear (the ⋯ and right-click items keep working). The iPad's menu bar belongs to the Obsidian app itself and can't be changed by plugins.
 
 Obsidian has no official way to add to the "No file is open" screen, so the plugin adds its entry to the page directly. If a future Obsidian version changes that screen, the entry may stop appearing (nothing else is affected). The commands, ribbon icons and pull-down action keep working.
 
@@ -90,6 +94,7 @@ The source is plain JavaScript in `src/`, bundled by esbuild. The tests run the 
 | File | What it does |
 | --- | --- |
 | `main.js` | Plugin entry: commands, ribbon, link handler, redraw on note changes |
+| `menus.js` | New to-do in the ⋯ menu, the right-click menu and the desktop File menu |
 | `todo-core.js` | Reading and editing to-do lines in a note's text (no Obsidian code) |
 | `store.js` | Reads and writes the to-do note(s) in the vault |
 | `view.js` | The list |

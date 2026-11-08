@@ -27,6 +27,9 @@ export function normalizePath(path) {
 	return path.replace(/\\/g, "/").replace(/\/+/g, "/").replace(/^\/|\/$/g, "") || "/";
 }
 
+/** Tests can switch these to imitate desktop or mobile. */
+export const Platform = { isDesktopApp: false, isMacOS: false, isMobile: false };
+
 export function setIcon(el, name) {
 	el.icon = name;
 }
@@ -144,6 +147,11 @@ export class Plugin {
 
 	registerEvent(ref) {
 		this.events.push(ref);
+	}
+
+	registerDomEvent(el, type, callback) {
+		this.domEvents = this.domEvents || [];
+		this.domEvents.push({ el, type, callback });
 	}
 
 	registerObsidianProtocolHandler(action, handler) {

@@ -1,5 +1,6 @@
 import { Notice, Plugin } from "obsidian";
 import { addEmptyStateAction, removeEmptyStateActions } from "./empty-state.js";
+import { MenuBarItem, registerInAppMenus } from "./menus.js";
 import { AddModal } from "./modals.js";
 import { DEFAULT_SETTINGS, QuickTodoSettingTab } from "./settings.js";
 import { TodoStore } from "./store.js";
@@ -32,17 +33,41 @@ export default class QuickTodoPlugin extends Plugin {
 		this.registerEvent(vault.on("delete", (file) => this.onNoteChanged(file.path)));
 		this.registerEvent(vault.on("rename", (file, oldPath) => this.onNoteChanged(file.path, oldPath)));
 
+		// "New to-do" in the note's ⋯ menu, the right-click menu, and (desktop) the File menu.
+		registerInAppMenus(this, () => this.settings.showInMenus, () => this.openAddBox());
+		this.menuBar = new MenuBarItem(() => this.openAddBox(), () => this.addItemHotkey());
+
 		// The "No file is open" screen is drawn by Obsidian after these events, so look again shortly afterwards too.
+		// Obsidian can also rebuild its menu bar (for example when a window opens), so check that here as well.
 		const { workspace } = this.app;
-		const refresh = () => this.refreshEmptyState();
+		const refresh = () => {
+			this.refreshEmptyState();
+			this.refreshMenuBar();
+		};
 		this.registerEvent(workspace.on("layout-change", refresh));
 		this.registerEvent(workspace.on("active-leaf-change", refresh));
 		this.registerEvent(workspace.on("file-open", refresh));
 		workspace.onLayoutReady(refresh);
+		this.registerDomEvent(window, "focus", () => this.refreshMenuBar());
 		this.register(() => {
 			window.clearTimeout(this.emptyTimer);
 			removeEmptyStateActions(this.app);
+			this.menuBar.remove();
 		});
+	}
+
+	/** The hotkey assigned to "Add item", so the menu bar can show it. */
+	addItemHotkey() {
+		const id = `${this.manifest.id}:add-item`;
+		const hm = this.app.hotkeyManager;
+		const keys = (hm && hm.customKeys && hm.customKeys[id]) || (hm && hm.defaultKeys && hm.defaultKeys[id]) || [];
+		return keys[0];
+	}
+
+	refreshMenuBar() {
+		if (!this.menuBar) return;
+		if (this.settings.showInMenus) this.menuBar.ensure();
+		else this.menuBar.remove();
 	}
 
 	async loadSettings() {
@@ -54,6 +79,7 @@ export default class QuickTodoPlugin extends Plugin {
 		if (redraw) {
 			this.redrawLists();
 			this.refreshEmptyState();
+			this.refreshMenuBar();
 		}
 	}
 

@@ -14,6 +14,8 @@ export const DEFAULT_SETTINGS = {
 	keepBoxOpen: false,
 	// Show "Quick to-do" on Obsidian's "No file is open" screen.
 	showOnEmptyTab: true,
+	// "New to-do" in the note's ⋯ menu, the right-click menu and the desktop File menu.
+	showInMenus: true,
 	// Optional note that "Clear" moves finished items into.
 	archivePath: "",
 	// Whether the Done section in the list is expanded.
@@ -117,6 +119,11 @@ export class QuickTodoSettingTab extends PluginSettingTab {
 			.setName("Show on the empty tab screen")
 			.setDesc("Adds Quick to-do beside Create new note, Go to file and the other options when no note is open.")
 			.addToggle((toggle) => toggle.setValue(s.showOnEmptyTab).onChange((value) => save("showOnEmptyTab", value)));
+
+		new Setting(containerEl)
+			.setName("Show in menus")
+			.setDesc("Adds New to-do to each note's More options menu and right-click menu, and on desktop to the File menu in the menu bar.")
+			.addToggle((toggle) => toggle.setValue(s.showInMenus).onChange((value) => save("showInMenus", value)));
 
 		new Setting(containerEl)
 			.setName("Archive note")

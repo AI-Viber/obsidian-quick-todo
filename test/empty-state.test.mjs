@@ -106,7 +106,7 @@ test("the plugin adds the entry when the workspace changes, and removes it when 
 	const { plugin, workspace } = pluginWith(tab);
 	await plugin.onload();
 
-	assert.deepEqual(workspace.listeners.map((l) => l.name).sort(), ["active-leaf-change", "file-open", "layout-change"]);
+	assert.deepEqual(workspace.listeners.map((l) => l.name).sort(), ["active-leaf-change", "editor-menu", "file-menu", "file-open", "layout-change"]);
 	assert.equal(typeof workspace.ready, "function");
 
 	workspace.ready();
