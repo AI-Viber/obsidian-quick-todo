@@ -1,6 +1,7 @@
 import { Notice, Plugin } from "obsidian";
 import { addEmptyStateAction, removeEmptyStateActions } from "./empty-state.js";
 import { AddModal } from "./modals.js";
+import { NoteButtons } from "./note-button.js";
 import { DEFAULT_SETTINGS, QuickTodoSettingTab } from "./settings.js";
 import { TodoStore } from "./store.js";
 import { TodoView, VIEW_TYPE } from "./view.js";
@@ -9,6 +10,7 @@ export default class QuickTodoPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		this.store = new TodoStore(this.app, () => this.settings);
+		this.noteButtons = new NoteButtons();
 
 		this.registerView(VIEW_TYPE, (leaf) => new TodoView(leaf, this));
 
@@ -34,14 +36,15 @@ export default class QuickTodoPlugin extends Plugin {
 
 		// The "No file is open" screen is drawn by Obsidian after these events, so look again shortly afterwards too.
 		const { workspace } = this.app;
-		const refresh = () => this.refreshEmptyState();
+		const refresh = () => this.refreshWorkspaceUi();
 		this.registerEvent(workspace.on("layout-change", refresh));
 		this.registerEvent(workspace.on("active-leaf-change", refresh));
 		this.registerEvent(workspace.on("file-open", refresh));
 		workspace.onLayoutReady(refresh);
 		this.register(() => {
-			window.clearTimeout(this.emptyTimer);
+			window.clearTimeout(this.uiTimer);
 			removeEmptyStateActions(this.app);
+			this.noteButtons.clear();
 		});
 	}
 
@@ -53,19 +56,24 @@ export default class QuickTodoPlugin extends Plugin {
 		await this.saveData(this.settings);
 		if (redraw) {
 			this.redrawLists();
-			this.refreshEmptyState();
+			this.refreshWorkspaceUi();
 		}
 	}
 
-	/** Show or hide the entry on the "No file is open" screen to match the setting. */
-	refreshEmptyState() {
+	/**
+	 * Make the bits we add to Obsidian's own screens match the settings: the entry on
+	 * the "No file is open" screen, and the Add button on the to-do note's header.
+	 * Obsidian draws those screens just after the events that call this, so it looks again shortly afterwards.
+	 */
+	refreshWorkspaceUi() {
 		const apply = () => {
 			if (this.settings.showOnEmptyTab) addEmptyStateAction(this.app, "Quick to-do", () => this.openAddBox());
 			else removeEmptyStateActions(this.app);
+			this.noteButtons.sync(this.app, this.store.targetPaths(), this.settings.showOnNote, "Add to-do", () => this.openAddBox());
 		};
 		apply();
-		window.clearTimeout(this.emptyTimer);
-		this.emptyTimer = window.setTimeout(apply, 200);
+		window.clearTimeout(this.uiTimer);
+		this.uiTimer = window.setTimeout(apply, 200);
 	}
 
 	openAddBox(prefill = "") {

@@ -49,6 +49,7 @@ export class FakeEl {
 	}
 
 	empty() {
+		for (const child of this.children) child.parent = null;
 		this.children = [];
 		this.text = "";
 	}
@@ -89,6 +90,11 @@ export class FakeEl {
 
 	focus() {
 		this.focused = true;
+	}
+
+	/** True while the element is attached to a parent, like the real DOM's isConnected. */
+	get isConnected() {
+		return this.parent !== null;
 	}
 
 	remove() {
