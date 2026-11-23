@@ -14,6 +14,8 @@ export const DEFAULT_SETTINGS = {
 	keepBoxOpen: false,
 	// Show "Quick to-do" on Obsidian's "No file is open" screen.
 	showOnEmptyTab: true,
+	// Show an "Add to-do" button in the header of the to-do note itself.
+	showOnNote: true,
 	// "New to-do" in the note's ⋯ menu, the right-click menu and the desktop File menu.
 	showInMenus: true,
 	// Optional note that "Clear" moves finished items into.
@@ -119,6 +121,11 @@ export class QuickTodoSettingTab extends PluginSettingTab {
 			.setName("Show on the empty tab screen")
 			.setDesc("Adds Quick to-do beside Create new note, Go to file and the other options when no note is open.")
 			.addToggle((toggle) => toggle.setValue(s.showOnEmptyTab).onChange((value) => save("showOnEmptyTab", value)));
+
+		new Setting(containerEl)
+			.setName("Show an Add button on the to-do note")
+			.setDesc("Adds a plus button to the note's header, so you can add an item however the note was opened, for example from a bookmark.")
+			.addToggle((toggle) => toggle.setValue(s.showOnNote).onChange((value) => save("showOnNote", value)));
 
 		new Setting(containerEl)
 			.setName("Show in menus")

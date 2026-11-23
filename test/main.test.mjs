@@ -22,6 +22,9 @@ function makeApp(files = {}) {
 		onLayoutReady(callback) {
 			this.ready = callback;
 		},
+		iterateAllLeaves(callback) {
+			this.leaves.forEach(callback);
+		},
 		getLeavesOfType(type) {
 			return this.leaves.filter((leaf) => leaf.type === type);
 		},

@@ -12,6 +12,7 @@ Built for the phone first, but it works the same on desktop.
 - **Daily note option**: save to today's daily note instead, and optionally list open items from the last few days too.
 - **Added date (optional)**: stamps new items with `➕ 2026-11-06`, the format the [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) plugin uses. The list shows it as a small date, highlighted once an item has waited two weeks.
 - **Clear or archive**: one button removes finished items, or moves them to an archive note if you set one. It asks for a second tap first.
+- **Add button on the note**: a plus button in the header of the to-do note itself, so you can add an item however the note was opened (a bookmark, search or a link), in the normal editor or another plugin's editor view such as WYSIWYG Mode. It can be turned off in settings.
 - **On the empty tab screen**: adds **Quick to-do** beside *Create new note*, *Go to file* and the other options on Obsidian's "No file is open" screen. Tap it to open the add box. It can be turned off in settings.
 - **In the menus**: **New to-do** is in each note's *More options* (⋯) menu and in the right-click menu while editing (long-press on a phone or tablet). On a Mac (and Windows or Linux) desktop it is also in the **File** menu of the menu bar, showing your *Add item* hotkey if you have set one. Each opens the add box. They can be turned off in settings.
 - **Add from a link**: `obsidian://quick-todo?vault=YOUR_VAULT&text=Buy%20milk` opens the add box with the text filled in (handy for an iOS Shortcut). It never adds anything by itself.
@@ -26,7 +27,7 @@ The plugin adds three commands, all under *Quick to-do* in the command palette:
 | Open list | Opens the list |
 | Open note | Opens the to-do note itself |
 
-The empty tab entry has no command of its own: it opens the same add box as *Add item*.
+The empty tab entry and the note's Add button have no commands of their own: they open the same add box as *Add item*.
 
 To make capturing quick:
 
@@ -60,6 +61,7 @@ New items look like this:
 - **Add the date to new items**: the `➕` date described above.
 - **Keep the add box open**: stay in the box after each item.
 - **Show on the empty tab screen**: the entry described above (on by default).
+- **Show an Add button on the to-do note**: the header button described above (on by default).
 - **Show in menus**: the New to-do menu items described above (on by default).
 - **Archive note**: where *Clear* moves finished items (blank means delete them).
 
@@ -73,7 +75,7 @@ To try it before then, install it with [BRAT](https://github.com/TfTHacker/obsid
 
 Obsidian has no official way for plugins to add to the menu bar. On desktop, Quick To-do adds its File menu item through Electron, the framework Obsidian's desktop app is built on. If a future Obsidian version blocks that, the item simply doesn't appear (the ⋯ and right-click items keep working). The iPad's menu bar belongs to the Obsidian app itself and can't be changed by plugins.
 
-Obsidian has no official way to add to the "No file is open" screen, so the plugin adds its entry to the page directly. If a future Obsidian version changes that screen, the entry may stop appearing (nothing else is affected). The commands, ribbon icons and pull-down action keep working.
+Obsidian has no official way to add to the "No file is open" screen, so the plugin adds its entry to the page directly. If a future Obsidian version changes that screen, the entry may stop appearing (nothing else is affected). The header button uses Obsidian's own header-button method, but where it appears on a phone (for example in the note's menu rather than the header) is up to Obsidian. The commands, ribbon icons and pull-down action keep working.
 
 ## Privacy
 
@@ -99,6 +101,7 @@ The source is plain JavaScript in `src/`, bundled by esbuild. The tests run the 
 | `store.js` | Reads and writes the to-do note(s) in the vault |
 | `view.js` | The list |
 | `empty-state.js` | The entry on the "No file is open" screen |
+| `note-button.js` | The Add button in the to-do note's header |
 | `modals.js` | The add and edit dialogs |
 | `settings.js` | Settings and the settings screen |
 | `ui.js` | The two-tap confirm used by Delete and Clear |

@@ -92,6 +92,7 @@ function pluginWith(tab, settings = {}) {
 		onLayoutReady(callback) {
 			this.ready = callback;
 		},
+		iterateAllLeaves: (callback) => [tab.leaf].forEach(callback),
 		getLeavesOfType: (type) => (type === "empty" ? [tab.leaf] : []),
 	};
 	const plugin = new QuickTodoPlugin({ vault, workspace }, { id: "quick-todo" });
