@@ -2,6 +2,7 @@ import { Notice, Plugin } from "obsidian";
 import { addEmptyStateAction, removeEmptyStateActions } from "./empty-state.js";
 import { MenuBarItem, registerInAppMenus } from "./menus.js";
 import { AddModal } from "./modals.js";
+import { NoteBars } from "./note-bar.js";
 import { NoteButtons } from "./note-button.js";
 import { DEFAULT_SETTINGS, QuickTodoSettingTab } from "./settings.js";
 import { TodoStore } from "./store.js";
@@ -12,6 +13,7 @@ export default class QuickTodoPlugin extends Plugin {
 		await this.loadSettings();
 		this.store = new TodoStore(this.app, () => this.settings);
 		this.noteButtons = new NoteButtons();
+		this.noteBars = new NoteBars();
 
 		this.registerView(VIEW_TYPE, (leaf) => new TodoView(leaf, this));
 
@@ -56,6 +58,7 @@ export default class QuickTodoPlugin extends Plugin {
 			removeEmptyStateActions(this.app);
 			this.menuBar.remove();
 			this.noteButtons.clear();
+			this.noteBars.clear();
 		});
 	}
 
@@ -88,14 +91,16 @@ export default class QuickTodoPlugin extends Plugin {
 
 	/**
 	 * Make the bits we add to Obsidian's own screens match the settings: the entry on
-	 * the "No file is open" screen, and the Add button on the to-do note's header.
+	 * the "No file is open" screen, and the Add button and add bar on the to-do note.
 	 * Obsidian draws those screens just after the events that call this, so it looks again shortly afterwards.
 	 */
 	refreshWorkspaceUi() {
 		const apply = () => {
 			if (this.settings.showOnEmptyTab) addEmptyStateAction(this.app, "Quick to-do", () => this.openAddBox());
 			else removeEmptyStateActions(this.app);
-			this.noteButtons.sync(this.app, this.store.targetPaths(), this.settings.showOnNote, "Add to-do", () => this.openAddBox());
+			const paths = this.store.targetPaths();
+			this.noteButtons.sync(this.app, paths, this.settings.showOnNote, "Add to-do", () => this.openAddBox());
+			this.noteBars.sync(this.app, paths, this.settings.showNoteBar, (text) => this.store.addTodo(text));
 		};
 		apply();
 		window.clearTimeout(this.uiTimer);

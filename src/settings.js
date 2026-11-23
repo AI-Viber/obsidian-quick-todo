@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS = {
 	showOnEmptyTab: true,
 	// Show an "Add to-do" button in the header of the to-do note itself.
 	showOnNote: true,
+	// Show an "Add a to-do" bar at the top of the to-do note itself.
+	showNoteBar: true,
 	// "New to-do" in the note's ⋯ menu, the right-click menu and the desktop File menu.
 	showInMenus: true,
 	// Optional note that "Clear" moves finished items into.
@@ -126,6 +128,11 @@ export class QuickTodoSettingTab extends PluginSettingTab {
 			.setName("Show an Add button on the to-do note")
 			.setDesc("Adds a plus button to the note's header, so you can add an item however the note was opened, for example from a bookmark.")
 			.addToggle((toggle) => toggle.setValue(s.showOnNote).onChange((value) => save("showOnNote", value)));
+
+		new Setting(containerEl)
+			.setName("Show an add bar at the top of the to-do note")
+			.setDesc("The same Add a to-do bar as in the list, so you can add an item however the note was opened, for example from a bookmark.")
+			.addToggle((toggle) => toggle.setValue(s.showNoteBar).onChange((value) => save("showNoteBar", value)));
 
 		new Setting(containerEl)
 			.setName("Show in menus")

@@ -160,3 +160,26 @@
 	gap: var(--size-4-2);
 	margin-top: var(--size-4-4);
 }
+
+/* Add bar at the top of the to-do note itself */
+.quick-todo-note-bar {
+	--quick-todo-row: 44px;
+	flex: none;
+	padding: var(--size-4-2) var(--size-4-4);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.quick-todo-note-bar button {
+	min-height: var(--quick-todo-row);
+}
+
+/* Lay the view out as a column so the bar sits above the note and the note takes the rest of the height. */
+.quick-todo-has-bar {
+	display: flex;
+	flex-direction: column;
+}
+
+.quick-todo-has-bar > :not(.quick-todo-note-bar) {
+	flex: 1 1 auto;
+	min-height: 0;
+}
